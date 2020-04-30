@@ -23,7 +23,13 @@ class ExpensesApp extends StatelessWidget {
                 fontFamily: 'OpenSans',
                 fontSize: 20,
                 fontWeight: FontWeight.w700),
+            button: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
+        ),
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.yellow, //  <-- light color
+          textTheme:
+              ButtonTextTheme.primary, //  <-- dark text for light background
         ),
       ),
       home: MyHomePage(),
@@ -37,23 +43,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [
-    Transaction(
-        id: 't0',
-        tittle: 'Conta Antiga',
-        value: 400,
-        date: DateTime.now().subtract(Duration(days: 33))),
-    Transaction(
-        id: 't1',
-        tittle: 'Novo Tênis de Corrida',
-        value: 310.76,
-        date: DateTime.now().subtract(Duration(days: 2))),
-    Transaction(
-        id: 't2',
-        tittle: 'Conta de Luz',
-        value: 211.30,
-        date: DateTime.now().subtract(Duration(days: 4))),
-  ];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((tr) {
@@ -61,18 +51,24 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
         id: Random().nextDouble().toString(),
         tittle: title,
         value: value,
-        date: DateTime.now());
+        date: date);
 
     setState(() {
       _transactions.add(newTransaction);
     });
 
     Navigator.of(context).pop();
+  }
+
+  _removeTransactions(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -102,13 +98,14 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Chart(
               recentTransaction: _recentTransactions,
             ),
             TransactionList(
               transactions: _transactions,
+              onRemove: _removeTransactions,
             ),
           ],
         ),

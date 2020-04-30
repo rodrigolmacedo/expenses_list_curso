@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
@@ -13,8 +14,14 @@ class ChartBar extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
-          FittedBox(
-            child: Text('${value.toStringAsFixed(2)}'),
+          Container(
+            height: 20.0,
+            child: FittedBox(
+              child: Text(NumberFormat.currency(
+                      locale: 'pt_BR', symbol: '', decimalDigits: 2)
+                  .format(value)
+                  .toString()),
+            ),
           ),
           SizedBox(
             height: 5,
@@ -26,6 +33,7 @@ class ChartBar extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               children: <Widget>[
                 Container(
+                  height: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey,
@@ -35,12 +43,16 @@ class ChartBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                FractionallySizedBox(
-                  heightFactor: percentage,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(5),
+                Flexible(
+                  child: FractionallySizedBox(
+                    heightFactor: percentage ?? 0,
+                    widthFactor: 1,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
                   ),
                 )
