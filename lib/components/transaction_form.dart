@@ -15,6 +15,9 @@ class _TransactionFormState extends State<TransactionForm> {
   final _valueController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
+  final FocusNode _titleNode = FocusNode();
+  final FocusNode _valueNode = FocusNode();
+
   _submitForm() {
     final title = _titleController.text;
     final value = double.tryParse(_valueController.text) ?? 0.0;
@@ -31,7 +34,8 @@ class _TransactionFormState extends State<TransactionForm> {
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(2019),
-            lastDate: DateTime.now())
+            lastDate: DateTime.now(),
+            helpText: 'Selecione uma data')
         .then((pickedDate) {
       if (pickedDate == null) return;
       setState(() {
@@ -49,11 +53,15 @@ class _TransactionFormState extends State<TransactionForm> {
         child: Column(
           children: <Widget>[
             TextField(
+              focusNode: _titleNode,
+              textInputAction: TextInputAction.next,
               decoration: InputDecoration(labelText: 'Título'),
               controller: _titleController,
-              onSubmitted: (_) => _submitForm(),
+              onSubmitted: (_) => _valueNode.requestFocus(),
             ),
             TextField(
+              focusNode: _valueNode,
+              textInputAction: TextInputAction.done,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               controller: _valueController,
               decoration: InputDecoration(labelText: 'Valor (R\$)'),

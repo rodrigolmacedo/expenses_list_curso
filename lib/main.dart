@@ -4,15 +4,31 @@ import 'package:expenses/components/chart.dart';
 import 'package:expenses/components/transaction_form.dart';
 import 'package:expenses/components/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 
 import 'models/transaction.dart';
 
-main() => runApp(ExpensesApp());
+main() {
+  //Intl.defaultLocale = 'pt_BR';
+  Intl.defaultLocale = 'pt_BR';
+  runApp(ExpensesApp());
+}
 
 class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        // ... app-specific localization delegate[s] here
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'), // English
+        const Locale('pt', 'BR'), // Português-BR
+        // ... other locales the app supports
+      ],
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
