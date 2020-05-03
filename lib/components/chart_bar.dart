@@ -11,23 +11,24 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Column(children: <Widget>[
           Container(
-            height: 20.0,
+            height: constraints.maxHeight * 0.15,
             child: FittedBox(
-              child: Text(NumberFormat.currency(
-                      locale: 'pt_BR', symbol: '', decimalDigits: 2)
-                  .format(value)
-                  .toString()),
+              child: Text(
+                NumberFormat.compactCurrency(
+                        locale: 'pt_BR', symbol: '', decimalDigits: 2)
+                    .format(value)
+                    .toString(),
+                //style: Theme.of(context).textTheme.caption,
+              ),
             ),
           ),
-          SizedBox(
-            height: 5,
-          ),
+          SizedBox(height: constraints.maxHeight * 0.05),
           Container(
-            height: 60,
+            height: constraints.maxHeight * 0.6,
             width: 10,
             child: Stack(
               alignment: Alignment.bottomCenter,
@@ -43,28 +44,31 @@ class ChartBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                Flexible(
-                  child: FractionallySizedBox(
-                    heightFactor: percentage ?? 0,
-                    widthFactor: 1,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+                FractionallySizedBox(
+                  heightFactor: percentage,
+                  widthFactor: 1,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
                 )
               ],
             ),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(label)
-        ],
-      ),
+          SizedBox(height: constraints.maxHeight * 0.05),
+          Container(
+            height: constraints.maxHeight * 0.15,
+            child: FittedBox(
+                child: Text(
+              label,
+              //style: Theme.of(context).textTheme.subtitle1,
+            )),
+          )
+        ]);
+      },
     );
   }
 }
